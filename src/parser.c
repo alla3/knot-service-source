@@ -72,7 +72,7 @@ static int parse_json2data(json_object *jobj, knot_value_type *kvalue)
 {
 	json_object *jobjkey;
 	const char *str;
-	int32_t ipart, fpart;
+	float fVal; /// float or knot_value_type_float?
 	uint8_t *u8val;
 	size_t olen;
 
@@ -86,11 +86,10 @@ static int parse_json2data(json_object *jobj, knot_value_type *kvalue)
 		/* Trick to get integral and fractional parts */
 		str = json_object_get_string(jobjkey);
 		/* FIXME: how to handle overflow? */
-		if (sscanf(str, "%d.%d", &ipart, &fpart) != 2)
+		if (sscanf(str, "%f", &fVal) <= 0)
 			break;
 
-		kvalue->val_f.value_int = ipart;
-		kvalue->val_f.value_dec = fpart;
+		kvalue->val_f = fVal; ///
 		olen = sizeof(kvalue->val_f);
 		break;
 	case json_type_int:
@@ -394,11 +393,11 @@ int8_t parser_config_is_valid(struct l_queue *config_list)
 					(KNOT_EVT_FLAG_LOWER_THRESHOLD |
 					KNOT_EVT_FLAG_UPPER_THRESHOLD)) {
 
-			diff_int = config->values.upper_limit.val_f.value_int -
-				config->values.lower_limit.val_f.value_int;
+			diff_int = config->values.upper_limit.val_f -
+				config->values.lower_limit.val_f;
 
-			diff_dec = config->values.upper_limit.val_f.value_dec -
-				config->values.lower_limit.val_f.value_dec;
+			diff_dec = config->values.upper_limit.val_f -
+				config->values.lower_limit.val_f;
 
 			if (diff_int < 0)
 				/*
