@@ -274,7 +274,7 @@ static int knot_value_get_double_length(const knot_value_type *data)
 {
 	char buffer[12]; /* INT_MAX 2147483647 */
 	/* FIXME: precision */
-	return sprintf(buffer, "%lf", data->val_f);
+	return sprintf(buffer, "%f", data->val_f);
 }
 
 /*
