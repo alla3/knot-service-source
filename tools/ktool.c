@@ -183,7 +183,7 @@ static void print_json_value(struct json_object *jobj,
 					"true" : "false", name);
 		break;
 	case json_type_double:
-		printf("%f(%s)\n", json_object_get_double(jobj), name);
+		printf("%lf(%s)\n", json_object_get_double(jobj), name);
 		break;
 	case json_type_int:
 		printf("%d(%s)\n", json_object_get_int(jobj), name);
@@ -790,9 +790,9 @@ static gboolean proto_receive(GIOChannel *io, GIOCondition cond,
 		printf("sensor_id: %d\n", recv.config.sensor_id);
 		printf("event_flags: %d\n", recv.config.values.event_flags);
 		printf("time_sec: %d\n", recv.config.values.time_sec);
-		printf("lower_limit: %f\n",
+		printf("lower_limit: %lf\n",
 				recv.config.values.lower_limit.val_f);
-		printf("upper_limit: %f\n",
+		printf("upper_limit: %lf\n",
 				recv.config.values.upper_limit.val_f);
 		resp.hdr.type = KNOT_MSG_CONFIG_RESP;
 		resp.hdr.payload_len = sizeof(resp.item.sensor_id);
@@ -811,7 +811,7 @@ static gboolean proto_receive(GIOChannel *io, GIOCondition cond,
 		break;
 	case KNOT_MSG_SET_DATA:
 		printf("sensor_id: %d\n", recv.data.sensor_id);
-		printf("value: %f\n",
+		printf("value: %lf\n",
 				recv.data.payload.val_f);
 		resp.hdr.type = KNOT_MSG_DATA_RESP;
 		resp.hdr.payload_len = sizeof(knot_value_type) +
