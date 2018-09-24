@@ -269,21 +269,21 @@ static int knot_value_as_int(const knot_value_type *data)
 
 /*
  * TODO: consider moving this to knot-protocol
- */
-static int knot_value_get_double_length(const knot_value_type *data)
-{
-	char buffer[12]; /* INT_MAX 2147483647 */
-	/* FIXME: precision */
-	return sprintf(buffer, "%f", data->val_f);
-}
+ */ 
+///
+// static int knot_value_get_double_length(const knot_value_type *data)
+// {
+// 	char buffer[12]; /* INT_MAX 2147483647 */
+// 	/* FIXME: precision */
+// 	return sprintf(buffer, "%f", data->val_f);
+// }
 
 /*
  * TODO: consider moving this to knot-protocol
  */
 static double knot_value_as_double(const knot_value_type *data)
 {
-	int length = knot_value_get_double_length(data);
-	return (data->val_f);
+	return (double) (data->val_f);
 }
 
 /*

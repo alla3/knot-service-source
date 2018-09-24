@@ -89,7 +89,7 @@ static int parse_json2data(json_object *jobj, knot_value_type *kvalue)
 		if (sscanf(str, "%f", &fVal) <= 0)
 			break;
 
-		kvalue->val_f = (float)fVal; ///
+		kvalue->val_f = fVal; ///
 		olen = sizeof(kvalue->val_f);
 		break;
 	case json_type_int:
