@@ -329,6 +329,7 @@ static json_object *data_create_object(uint8_t sensor_id, uint8_t value_type,
 	case KNOT_VALUE_TYPE_FLOAT:
 		json_object_object_add(data, "value",
 			json_object_new_double(knot_value_as_double(value)));
+			hal_log_info("huehue Value: %f", value);
 		break;
 	case KNOT_VALUE_TYPE_BOOL:
 		json_object_object_add(data, "value",
