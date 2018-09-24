@@ -283,7 +283,7 @@ static int knot_value_as_int(const knot_value_type *data)
  */
 static double knot_value_as_double(const knot_value_type *data)
 {
-	return (double) (data->val_f);
+	return (double)(data->val_f);
 }
 
 /*
@@ -327,17 +327,15 @@ static json_object *data_create_object(uint8_t sensor_id, uint8_t value_type,
 				json_object_new_int(knot_value_as_int(value)));
 		break;
 	case KNOT_VALUE_TYPE_FLOAT:
+		json_object_object_add(data, "value",
+			json_object_new_double(knot_value_as_double(value)));
 			char buffer[12]; /* INT_MAX 2147483647 */
 			/* FIXME: precision */
 			sprintf(buffer, "%f", value->val_f);
-			json_object_object_add(data, "value",
-			json_object_new_string(buffer));
-			// json_object_new_double(knot_value_as_double(value)));
 			hal_log_info("huehue SValue: %s", buffer);
 			hal_log_info("huehue FValue: %f", value->val_f);
 			hal_log_info("huehue DValue: %lf", knot_value_as_double(value));
 			hal_log_info("huehue json: %s", json_object_to_json_string(data));
-			hal_log_info("huehue json object: %s", json_object_to_json_string(json_object_new_double(knot_value_as_double(value))));
 		break;
 	case KNOT_VALUE_TYPE_BOOL:
 		json_object_object_add(data, "value",
