@@ -895,9 +895,9 @@ static ssize_t msg_process(struct session *session,
 		eof = kreq->hdr.type == KNOT_MSG_SCHM_END_REQ ? true : false;
 		result = msg_schema(session, &kreq->schema, eof);
 		if (eof)
-			rtype = KNOT_MSG_SCHM_END_RSP;
-		else
-			rtype = KNOT_MSG_SCHM_FRAG_RSP;
+			return 0;
+
+		rtype = KNOT_MSG_SCHM_FRAG_RSP;
 		break;
 	case KNOT_MSG_PUSH_CONFIG_RSP:
 		result = msg_config_resp(session, &kreq->item);
@@ -1315,17 +1315,36 @@ static bool handle_device_removed(const char *device_id)
 	return false;
 }
 
+static ssize_t send_schema_end_rsp(const struct node_ops *node_ops, int node_fd)
+{
+	knot_msg msg;
+
+	memset(&msg, 0, sizeof(msg));
+
+	msg.hdr.type = KNOT_MSG_SCHM_END_RSP;
+
+	return node_ops->send(node_fd, &msg, sizeof(msg));
+}
+
 static bool handle_schema_updated(struct session *session,
 				  const char *device_id, const char *err)
 {
 	struct knot_device *device;
+	ssize_t osent;
+	int osent_err;
 
 	if (err) {
 		hal_log_error("%s", err);
 		return true;
 	}
 
-	/* TODO: Send KNOT_MSG_SCHM_END_RSP using node_ops */
+	osent = send_schema_end_rsp(session->node_ops, session->node_fd);
+	if (osent < 0) {
+		osent_err = -osent;
+		hal_log_error("[session %p] Can't send schema response %s(%d)",
+			      session, strerror(osent_err), osent_err);
+		return false;
+	}
 
 	device = device_get(device_id);
 	if (device)
